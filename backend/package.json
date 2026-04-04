@@ -1,20 +1,16 @@
 {
-  "name": "backend",
+  "name": "ae-website-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "ruotes.js",
+  "description": "Backend for AE Website",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
-    "@supabase/supabase-js": "^2.101.1",
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
