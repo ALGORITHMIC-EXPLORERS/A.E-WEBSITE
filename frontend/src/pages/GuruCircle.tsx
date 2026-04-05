@@ -57,7 +57,7 @@ function pol(deg: number, r: number): Position {
   return { x: 50 + r * Math.cos(rad), y: 50 + r * Math.sin(rad) };
 }
 
-export default function GuruCircleDark(): JSX.Element {
+export default function GuruCircle() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -69,7 +69,6 @@ export default function GuruCircleDark(): JSX.Element {
   return (
     <div
       style={{
-        minHeight: "100vh",
         background: "linear-gradient(155deg,#0d0b2e 0%,#080620 55%,#110935 100%)",
         fontFamily: "'Sora','DM Sans',sans-serif",
         color: "white",
@@ -240,7 +239,7 @@ export default function GuruCircleDark(): JSX.Element {
         <div
           style={{
             position: "absolute",
-            top: "50%",
+            top: "55%",
             left: "50%",
             transform: "translate(-50%,-55%)",
             width: "37%",
@@ -277,33 +276,29 @@ export default function GuruCircleDark(): JSX.Element {
             Dive deep in immersive, interactive groups. Expand horizons, engage in
             discussions, and elevate your learning journey with us.
           </p>
-          <button
+          <button className="px-8 mt-2 py-3"
             style={{
               background: "#5b21b6",
               color: "white",
               border: "none",
               borderRadius: "7px",
-              padding: "clamp(5px,1vw,9px) 0",
               fontWeight: 700,
               fontSize: "clamp(0.55rem,1.05vw,0.78rem)",
               cursor: "pointer",
-              width: "100%",
               letterSpacing: "0.03em",
             }}
           >
             Get Started
           </button>
-          <button
+          <button className="px-8 py-3 mt-1"
             style={{
               background: "#0f0d25",
               color: "white",
               border: "1px solid rgba(255,255,255,0.15)",
               borderRadius: "7px",
-              padding: "clamp(5px,1vw,9px) 0",
               fontWeight: 700,
               fontSize: "clamp(0.55rem,1.05vw,0.78rem)",
               cursor: "pointer",
-              width: "100%",
               letterSpacing: "0.03em",
             }}
           >
