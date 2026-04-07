@@ -23,7 +23,6 @@
 #root {
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
   border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
@@ -34,6 +33,8 @@
 
 body {
   color: white;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 .marquee-edge-left,
@@ -64,4 +65,5 @@ body {
     rgba(5, 0, 32, 0.82) 35%,
     rgba(5, 0, 32, 0) 100%
   );
+
 }

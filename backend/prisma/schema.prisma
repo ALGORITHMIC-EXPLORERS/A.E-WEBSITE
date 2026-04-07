@@ -1,0 +1,279 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+enum ModuleProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ResourceType {
+  VIDEO
+  LINK
+  DOCUMENT
+  NOTE
+}
+
+enum TestimonialStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id                        String                 @id @default(cuid())
+  firstName                 String
+  lastName                  String
+  email                     String                 @unique
+  passwordHash              String
+  role                      UserRole               @default(STUDENT)
+  status                    UserStatus             @default(PENDING_VERIFICATION)
+  avatarUrl                 String?
+  emailVerifiedAt           DateTime?
+  lastLoginAt               DateTime?
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  sessions                  Session[]
+  emailVerificationTokens   EmailVerificationToken[]
+  passwordResetTokens       PasswordResetToken[]
+  moduleProgresses          UserModuleProgress[]
+  quizAttempts              QuizAttempt[]
+  authoredTestimonials      Testimonial[]          @relation("AuthorTestimonials")
+  approvedTestimonials      Testimonial[]          @relation("ApproverTestimonials")
+
+  @@index([role, status])
+}
+
+model Session {
+  id               String    @id @default(cuid())
+  userId           String
+  refreshTokenHash String    @unique
+  userAgent        String?
+  ipAddress        String?
+  expiresAt        DateTime
+  lastUsedAt       DateTime?
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model EmailVerificationToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  fullName    String
+  roleTitle   String
+  bio         String
+  imageUrl    String?
+  linkedinUrl String?
+  twitterUrl  String?
+  sortOrder   Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder, isVisible])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  link        String
+  imageUrl    String?
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id           String            @id @default(cuid())
+  userId       String?
+  name         String
+  title        String?
+  company      String?
+  content      String
+  rating       Int?
+  status       TestimonialStatus @default(PENDING)
+  isFeatured   Boolean           @default(false)
+  approvedById String?
+  approvedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  user         User?             @relation("AuthorTestimonials", fields: [userId], references: [id], onDelete: SetNull)
+  approvedBy   User?             @relation("ApproverTestimonials", fields: [approvedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+}
+
+model Module {
+  id                String               @id @default(cuid())
+  title             String
+  slug              String               @unique
+  shortDescription  String
+  description       String
+  order             Int                  @default(0)
+  estimatedMinutes  Int?
+  isPublished       Boolean              @default(false)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  resources         ModuleResource[]
+  quiz              Quiz?
+  userProgresses    UserModuleProgress[]
+
+  @@index([order, isPublished])
+}
+
+model ModuleResource {
+  id         String       @id @default(cuid())
+  moduleId   String
+  title      String
+  type       ResourceType
+  url        String?
+  content    String?
+  sortOrder  Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  module     Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId, sortOrder])
+}
+
+model Quiz {
+  id               String         @id @default(cuid())
+  moduleId         String         @unique
+  title            String
+  instructions     String?
+  passingScore     Int            @default(70)
+  timeLimitMinutes Int?
+  isPublished      Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  module           Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  questions        QuizQuestion[]
+  attempts         QuizAttempt[]
+}
+
+model QuizQuestion {
+  id          String       @id @default(cuid())
+  quizId       String
+  prompt      String
+  explanation String?
+  sortOrder   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options     QuizOption[]
+  responses   QuizResponse[]
+
+  @@index([quizId, sortOrder])
+}
+
+model QuizOption {
+  id         String       @id @default(cuid())
+  questionId String
+  label      String
+  isCorrect  Boolean      @default(false)
+  sortOrder  Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, sortOrder])
+}
+
+model QuizAttempt {
+  id             String         @id @default(cuid())
+  userId         String
+  quizId         String
+  score          Int
+  totalQuestions Int
+  correctAnswers Int
+  submittedAt    DateTime       @default(now())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz           Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  responses      QuizResponse[]
+
+  @@index([userId, submittedAt])
+  @@index([quizId, submittedAt])
+}
+
+model QuizResponse {
+  id               String       @id @default(cuid())
+  attemptId        String
+  questionId       String
+  selectedOptionId String?
+  isCorrect        Boolean
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  attempt          QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question         QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+}
+
+model UserModuleProgress {
+  id             String               @id @default(cuid())
+  userId         String
+  moduleId       String
+  status         ModuleProgressStatus @default(NOT_STARTED)
+  progressPercent Int                 @default(0)
+  startedAt      DateTime?
+  completedAt    DateTime?
+  lastAccessedAt DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module         Module               @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([userId, status])
+}
