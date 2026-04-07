@@ -1,12 +1,17 @@
-import Guru from "./pages/Guru"
-import HomePage from "./pages/HomePage"
+// import Guru from "./pages/Guru"
+// import HomePage from "./pages/HomePage"
+  import Signup from "./pages/Signup"
+
+//  import Login from "./pages/Login"
 
 function App() {
 
   return (
     <>
-      <Guru/>
-      <HomePage/>
+      {/* <Guru/>
+      <HomePage/> */}
+      <Signup/>
+      {/* <Login/> */}
     </>
   )
 }
