@@ -17,6 +17,7 @@ import { AccessTokenPayload, signAccessToken } from "../../shared/utils/token";
 export interface RegisterInput {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -32,6 +33,7 @@ export interface AuthenticatedUser {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   role: AccessTokenPayload["role"];
   status: AccessTokenPayload["status"];
@@ -86,6 +88,7 @@ function toAuthenticatedUser(user: {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   role: User["role"];
   status: User["status"];
@@ -94,6 +97,7 @@ function toAuthenticatedUser(user: {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+    username: user.username,
     email: user.email,
     role: user.role as AccessTokenPayload["role"],
     status: user.status as AccessTokenPayload["status"]
@@ -185,6 +189,7 @@ async function createAuthenticationResult(
     id: string;
     firstName: string;
     lastName: string;
+    username: string;
     email: string;
     role: User["role"];
     status: User["status"];
@@ -226,6 +231,15 @@ export const authService = {
     const existingUser = await prisma.user.findUnique({
       where: {
         email: input.email
+      },
+      select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      username: true, 
+      email: true,
+      role: true,
+      status: true
       }
     });
 
@@ -245,6 +259,19 @@ export const authService = {
       };
     }
 
+    //username intigration
+        const existingUsername = await prisma.user.findUnique({
+       where: {
+        username: input.username
+      }
+    });
+    
+    if (existingUsername) {
+      throw new AppError(409, "Username already taken.", "USERNAME_IN_USE");
+    }
+
+
+
     const passwordHash = await hashPassword(input.password);
 
     const user = await prisma.user.create({
@@ -252,6 +279,7 @@ export const authService = {
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
+        username: input.username,
         passwordHash,
         role: "STUDENT",
         status: "PENDING_VERIFICATION"
@@ -560,7 +588,7 @@ export const authService = {
     userId: string;
     currentPassword: string;
     newPassword: string;
-  }): Promise<void> => {
+   }): Promise<void> => {
     if (input.currentPassword === input.newPassword) {
       throw new AppError(
         400,

@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
+   url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -45,6 +45,7 @@ model User {
   firstName                 String
   lastName                  String
   email                     String                 @unique
+  username                  String                 @unique
   passwordHash              String
   role                      UserRole               @default(STUDENT)
   status                    UserStatus             @default(PENDING_VERIFICATION)
