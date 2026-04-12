@@ -1,6 +1,7 @@
 import LearningCohort from "./pages/LearningCohort"
 import Guru from "./pages/Guru"
 import HomePage from "./pages/HomePage"
+import Coursedetails from "./pages/CourseDetails"
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
       <LearningCohort/>
       <Guru/>
       <HomePage/>
+      <Coursedetails />
     </>
   )
 }
