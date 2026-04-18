@@ -107,7 +107,7 @@ export default function ContactPage() {
                   <h3 className="text-2xl font-semibold text-white mb-2 relative z-10">Join the WhatsApp Group</h3>
                   <p className="text-white/70 mb-6 relative z-10 max-w-sm">Get real-time updates, daily algo challenges, and instant support from the community.</p>
                   <a 
-                    href="https://chat.whatsapp.com/your-invite-link" 
+                    href="https://forms.gle/sc9w11jVmH6tucEo8" 
                     target="_blank" 
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 bg-[#25D366] text-black font-bold py-3 px-6 rounded-xl hover:bg-[#1EBE5A] transition-colors relative z-10"
@@ -121,10 +121,10 @@ export default function ContactPage() {
                 <div className="mt-12">
                   <h4 className="text-white text-sm uppercase tracking-widest font-semibold mb-4">Follow our journey</h4>
                   <div className="flex gap-4">
-                    <a href="#" className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#1DA1F2] transition-colors">
+                    <a href="https://x.com/AlgorithmicExp_?t=zL9moipPK_qgjFI7OrrIrQ&s=09" className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#1DA1F2] transition-colors">
                       <FaTwitter size={18} className="text-white" />
                     </a>
-                    <a href="#" className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#0A66C2] transition-colors">
+                    <a href="https://www.linkedin.com/company/algorithmic-explorers/" className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-[#0A66C2] transition-colors">
                       <FaLinkedin size={18} className="text-white" />
                     </a>
                     <a href="#" className="w-10 h-10 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">

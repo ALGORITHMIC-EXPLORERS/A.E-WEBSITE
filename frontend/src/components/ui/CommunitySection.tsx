@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 // TODO: Replace with your real WhatsApp / Discord / Telegram invite link
-const COMMUNITY_LINK = "https://chat.whatsapp.com/your-invite-link-here";
+const COMMUNITY_LINK = "https://forms.gle/sc9w11jVmH6tucEo8";
 
 const VECTOR = "Vector.png";
 const GHANA = "ghana 1.png";

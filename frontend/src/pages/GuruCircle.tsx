@@ -355,6 +355,57 @@ export default function GuruCircle() {
         ))}
       </div>
 
+      {/* ── GET STARTED SECTION ── */}
+      <div className="w-full bg-[#070014] py-20 md:py-28 px-4 sm:px-6 relative overflow-hidden">
+        {/* Decorative glow */}
+        <div className="absolute -top-40 -right-1/3 w-96 h-96 rounded-full bg-[rgba(135,75,255,0.12)] blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-40 -left-1/4 w-96 h-96 rounded-full bg-[rgba(79,39,245,0.08)] blur-[100px] pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          {/* Heading */}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            Ready to Join the Circle?
+          </h2>
+          
+          {/* Subheading */}
+          <p className="text-lg md:text-xl text-white/70 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed">
+            Connect with experts, collaborate with learners, and unlock exclusive opportunities in our thriving community.
+          </p>
+
+          {/* CTA Section */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
+            {/* Primary Button */}
+            <button 
+              className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-[#7928FF] to-[#4C00FF] text-white font-bold rounded-lg hover:scale-105 transition-transform duration-200 shadow-lg text-base md:text-lg"
+            >
+              Get Started Now
+            </button>
+            
+            {/* Secondary Button */}
+            <button 
+              className="w-full sm:w-auto px-10 py-4 border-2 border-white/20 text-white font-bold rounded-lg hover:bg-white/5 transition-colors duration-200 text-base md:text-lg"
+            >
+              Explore as Guest
+            </button>
+          </div>
+
+          {/* Email Signup */}
+          <div className="mt-12 md:mt-16">
+            <p className="text-white/60 text-sm md:text-base mb-4">Or stay in the loop with our newsletter</p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email..."
+                className="flex-1 px-5 py-3 md:py-4 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#7928FF] focus:bg-white/15 transition-all"
+              />
+              <button className="px-8 py-3 md:py-4 bg-gradient-to-r from-[#7928FF] to-[#4C00FF] text-white font-semibold rounded-lg hover:shadow-lg transition-all whitespace-nowrap">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <style>{`
         @keyframes float {
           0%,100% { transform: translate(-50%,-50%) translateY(0); }
