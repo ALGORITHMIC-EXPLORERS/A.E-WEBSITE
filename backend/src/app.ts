@@ -10,6 +10,7 @@ import { apiRouter } from "./routes";
 
 const app = express();
 
+// CORS configuration - allow requests from the frontend origin
 app.use(
   cors({
     origin: env.corsOrigin,

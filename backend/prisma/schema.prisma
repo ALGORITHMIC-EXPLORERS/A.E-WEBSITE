@@ -1,11 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -44,6 +42,7 @@ model User {
   id                        String                 @id @default(cuid())
   firstName                 String
   lastName                  String
+  username                  String                 @unique
   email                     String                 @unique
   passwordHash              String
   role                      UserRole               @default(STUDENT)

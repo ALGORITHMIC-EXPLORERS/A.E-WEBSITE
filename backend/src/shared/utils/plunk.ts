@@ -15,6 +15,8 @@ function parsePlunkErrorDetails(raw: string): unknown {
   }
 }
 
+
+//this code below plunk api key is not configured. The service should fail fast or gracefully handle missing email configuration. Risk: Users can't verify emails without explicit error during startup.
 export async function sendEmailWithPlunk(input: SendEmailInput): Promise<void> {
   if (!env.plunkApiKey) {
     throw new AppError(

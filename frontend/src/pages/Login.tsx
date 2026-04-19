@@ -1,4 +1,7 @@
-import { useState, type ChangeEvent, type ReactElement } from "react";
+import { useState, useEffect, type ChangeEvent, type ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { apiFetch } from "../lib/api";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaFacebook, FaGoogle, FaMicrosoft } from "react-icons/fa";
 import loginImg from "/login_mage.png";
@@ -10,22 +13,51 @@ type LoginData = {
 };
 
 const Login = (): ReactElement => {
+  const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<LoginData>({
     username: "",
     password: "",
   });
 
-  const create_acct = (): void => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleLogin = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    
     if (data.username.trim() === "" || data.password.trim() === "") {
       alert("Please fill in all fields");
       return;
     }
-    // Proceed with account creation logic (e.g., API cal)
-    alert("Thanks for Login In !");
-    setData({
-      username: "",
-      password: "",
-    });
+
+    setLoading(true);
+    try {
+      const result = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: data.username, // mapping username field to email for backend
+          password: data.password,
+        }),
+      });
+
+      // Use centralized login from AuthContext
+      console.log("Login successful, updating context state...");
+      login(result.user, result.accessToken);
+
+      console.log("Navigating to dashboard...");
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Login attempt failed:", error);
+      alert(error.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (field: keyof LoginData) =>
@@ -47,7 +79,7 @@ const Login = (): ReactElement => {
           <h1 className="text-2xl text-[#EFE1E1] text-center font-bold mb-6">
             Sign in to your account
           </h1>
-          <form className="flex flex-col gap-7">
+          <form className="flex flex-col gap-7" onSubmit={handleLogin}>
             <div className="userName">
               <label htmlFor="username ">Username</label>
               <input
@@ -70,10 +102,11 @@ const Login = (): ReactElement => {
                 onChange={handleInputChange("password")}
               />
             </div>
-            <div className="button cursor-pointer text-white " onClick={create_acct}>
+            <div className="button cursor-pointer text-white ">
               <Button
+                type="submit"
                 color="#5F00FF"
-                text="Sign In"
+                text={loading ? "Signing in..." : "Sign In"}
                 icon={<FaArrowRight />}
                 size="inherit"
                 iconPosition="right"

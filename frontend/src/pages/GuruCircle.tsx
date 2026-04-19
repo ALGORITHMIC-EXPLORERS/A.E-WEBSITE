@@ -98,11 +98,10 @@ export default function GuruCircle() {
 
       {/* ── ORBITAL SQUARE ── */}
       <div
+        className="relative w-[95vw] md:w-[min(115vw,898px)]"
         style={{
-          position: "relative",
-          width: "min(115vw, 898px)",
           aspectRatio: "1 / 1",
-          marginTop: "-2vw",
+          marginTop: "clamp(-20px, -2vw, -10px)",
           flexShrink: 0,
         }}
       >
@@ -237,19 +236,9 @@ export default function GuruCircle() {
 
         {/* ── CENTER TEXT ── */}
         <div
+          className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-[55%] w-[85%] md:w-[37%] text-center flex flex-col items-center z-[6] transition-opacity duration-600 delay-200"
           style={{
-            position: "absolute",
-            top: "55%",
-            left: "50%",
-            transform: "translate(-50%,-55%)",
-            width: "37%",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
             gap: "clamp(6px,1vw,12px)",
-            zIndex: 6,
-            transition: "opacity 600ms 200ms",
             opacity: mounted ? 1 : 0,
           }}
         >
@@ -266,8 +255,8 @@ export default function GuruCircle() {
             <span style={{ color: "#7c3aed" }}>Guru Circle</span>
           </h1>
           <p
+            className="text-[clamp(0.7rem,1.15vw,0.8rem)] md:text-[clamp(0.58rem,1.15vw,0.8rem)]"
             style={{
-              fontSize: "clamp(0.58rem,1.15vw,0.8rem)",
               color: "rgba(200,190,255,0.65)",
               lineHeight: 1.6,
               margin: 0,
@@ -276,49 +265,42 @@ export default function GuruCircle() {
             Dive deep in immersive, interactive groups. Expand horizons, engage in
             discussions, and elevate your learning journey with us.
           </p>
-          <button className="px-8 mt-2 py-3"
-            style={{
-              background: "#5b21b6",
-              color: "white",
-              border: "none",
-              borderRadius: "7px",
-              fontWeight: 700,
-              fontSize: "clamp(0.55rem,1.05vw,0.78rem)",
-              cursor: "pointer",
-              letterSpacing: "0.03em",
-            }}
-          >
-            Get Started
-          </button>
-          <button className="px-8 py-3 mt-1"
-            style={{
-              background: "#0f0d25",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.15)",
-              borderRadius: "7px",
-              fontWeight: 700,
-              fontSize: "clamp(0.55rem,1.05vw,0.78rem)",
-              cursor: "pointer",
-              letterSpacing: "0.03em",
-            }}
-          >
-            Guest Mode
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full justify-center">
+            <button className="px-8 py-3 w-full sm:w-auto"
+              style={{
+                background: "#5b21b6",
+                color: "white",
+                border: "none",
+                borderRadius: "7px",
+                fontWeight: 700,
+                fontSize: "clamp(0.65rem,1.05vw,0.78rem)",
+                cursor: "pointer",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Get Started
+            </button>
+            <button className="px-8 py-3 w-full sm:w-auto"
+              style={{
+                background: "#0f0d25",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.15)",
+                borderRadius: "7px",
+                fontWeight: 700,
+                fontSize: "clamp(0.65rem,1.05vw,0.78rem)",
+                cursor: "pointer",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Guest Mode
+            </button>
+          </div>
         </div>
 
         {/* ── FEATURE CARDS ── */}
         <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-[clamp(6px,1vw,10px)] absolute -bottom-40 md:bottom-[13%] left-1/2 -translate-x-1/2 w-[90%] md:w-full z-[25] transition-opacity duration-700 delay-700"
           style={{
-            position: "absolute",
-            bottom: "13%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "100%",
-            display: "grid",
-            gridTemplateColumns: "repeat(3,1fr)",
-            gap: "clamp(6px,1vw,10px)",
-            zIndex: 25,
-            transition: "opacity 700ms 700ms",
             opacity: mounted ? 1 : 0,
           }}
         >
@@ -349,17 +331,8 @@ export default function GuruCircle() {
 
       {/* ── STATS ROW ── */}
       <div
+        className="flex flex-wrap justify-center gap-6 md:gap-[clamp(20px,5vw,72px)] w-full max-w-[min(88vw,760px)] px-6 pb-12 mt-48 md:mt-4 relative z-[30] transition-opacity duration-600 delay-900"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "clamp(20px,5vw,72px)",
-          width: "100%",
-          maxWidth: "min(88vw,760px)",
-          padding: "0 24px 44px",
-          marginTop: "1vw",
-          position: "relative",
-          zIndex: 30,
-          transition: "opacity 600ms 900ms",
           opacity: mounted ? 1 : 0,
         }}
       >
