@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../lib/api";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaFacebook, FaGoogle, FaMicrosoft } from "react-icons/fa";
 import classImg from "/class.png";
@@ -14,6 +16,8 @@ type SignupData = {
 };
 
 const Signup = (): ReactElement => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<SignupData>({
     firstName: "",
     lastName: "",
@@ -23,11 +27,10 @@ const Signup = (): ReactElement => {
     confirmPassword: "",
   });
 
-  const create_acct = (): void => {
+  const create_acct = async (): Promise<void> => {
     if (
       data.firstName.trim() === "" ||
       data.lastName.trim() === "" ||
-      data.username.trim() === "" ||
       data.email.trim() === "" ||
       data.password.trim() === "" ||
       data.confirmPassword.trim() === ""
@@ -43,16 +46,27 @@ const Signup = (): ReactElement => {
       alert("Please enter a valid email address");
       return;
     }
-    // Proceed with account creation logic (e.g., API cal)
-    alert("Account created successfully!");
-    setData({
-      firstName: "",
-      lastName: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+
+    setLoading(true);
+    try {
+      await apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        }),
+      });
+
+      alert("Account created successfully! Please check your email for verification.");
+      navigate("/login");
+    } catch (error: any) {
+      alert(error.message || "Failed to create account");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (field: keyof SignupData) =>
@@ -147,7 +161,7 @@ const Signup = (): ReactElement => {
             <div className="button cursor-pointer " onClick={create_acct}>
               <Button
                 color="#5F00FF"
-                text="Create Account"
+                text={loading ? "Registering..." : "Create Account"}
                 icon={<FaArrowRight />}
                 size="inherit"
                 iconPosition="right"

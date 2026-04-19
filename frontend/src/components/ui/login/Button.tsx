@@ -7,6 +7,7 @@ type ButtonProps = {
   size: string;
   iconPosition: "left" | "right";
   img?: string;
+  type?: "button" | "submit" | "reset";
 };
 
 const Button = ({
@@ -16,10 +17,12 @@ const Button = ({
   size,
   iconPosition,
   img,
+  type,
 }: ButtonProps) => {
   return (
-    <div
-      className={`cursor-pointer px-6 py-4 justify-center rounded-md inline-flex items-center gap-2 ${
+    <button
+      type={type || "button"}
+      className={`cursor-pointer px-6 py-4 justify-center rounded-md inline-flex items-center gap-2 border-none outline-none ${
         iconPosition === "left" ? "flex-row-reverse" : ""
       }`}
       style={{ backgroundColor: color, width: size }}
@@ -32,7 +35,7 @@ const Button = ({
           icon
         )}
       </span>
-    </div>
+    </button>
   );
 };
 

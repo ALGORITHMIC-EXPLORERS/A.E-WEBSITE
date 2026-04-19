@@ -1,4 +1,4 @@
-import Navbar from "../components/ui/learning-cohorts/Navbar";
+import Navbar from "../components/ui/GenNavbar";
 import Hero from "../components/ui/learning-cohorts/Hero";
 import Stats from "../components/ui/learning-cohorts/Stats";
 import TopCategories from "../components/ui/learning-cohorts/TopCategories";

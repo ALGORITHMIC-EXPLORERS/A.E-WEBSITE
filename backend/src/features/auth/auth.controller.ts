@@ -34,6 +34,7 @@ export const authController = {
     const result = await authService.register({
       firstName: requireString(body.firstName, "firstName", { maxLength: 80 }),
       lastName: requireString(body.lastName, "lastName", { maxLength: 80 }),
+      username: requireString(body.username, "username", { maxLength: 80 }),
       email: requireEmail(body.email),
       password: requirePassword(body.password)
     });
@@ -59,7 +60,7 @@ export const authController = {
   login: asyncHandler(async (req: Request, res: Response) => {
     const body = req.body as Record<string, unknown>;
     const result = await authService.login({
-      email: requireEmail(body.email),
+      email: requireString(body.email, "email"),
       password: requirePassword(body.password),
       userAgent: req.headers["user-agent"],
       ipAddress: getClientIp(req)

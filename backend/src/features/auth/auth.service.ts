@@ -17,6 +17,7 @@ import { AccessTokenPayload, signAccessToken } from "../../shared/utils/token";
 export interface RegisterInput {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -32,6 +33,7 @@ export interface AuthenticatedUser {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   role: AccessTokenPayload["role"];
   status: AccessTokenPayload["status"];
@@ -86,6 +88,7 @@ function toAuthenticatedUser(user: {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   role: User["role"];
   status: User["status"];
@@ -94,6 +97,7 @@ function toAuthenticatedUser(user: {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+    username: user.username,
     email: user.email,
     role: user.role as AccessTokenPayload["role"],
     status: user.status as AccessTokenPayload["status"]
@@ -185,6 +189,7 @@ async function createAuthenticationResult(
     id: string;
     firstName: string;
     lastName: string;
+    username: string;
     email: string;
     role: User["role"];
     status: User["status"];
@@ -223,26 +228,45 @@ async function createAuthenticationResult(
 
 export const authService = {
   register: async (input: RegisterInput): Promise<RegisterResult> => {
-    const existingUser = await prisma.user.findUnique({
+    // Check both email and username in ONE database query (more efficient)
+    const existingUser = await prisma.user.findFirst({
       where: {
-        email: input.email
+        OR: [
+          { email: input.email },
+          { username: input.username }
+        ]
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        username: true, 
+        email: true,
+        role: true,
+        status: true
       }
     });
 
     if (existingUser) {
-      if (existingUser.status !== "PENDING_VERIFICATION") {
-        throw new AppError(409, "An account with this email already exists.", "EMAIL_IN_USE");
+      // Check if it's email or username conflict
+      if (existingUser.email === input.email) {
+        if (existingUser.status !== "PENDING_VERIFICATION") {
+          throw new AppError(409, "An account with this email already exists.", "EMAIL_IN_USE");
+        }
+        const existingUserDelivery = await trySendVerificationEmail(existingUser);
+        return {
+          user: toAuthenticatedUser(existingUser),
+          verificationRequired: true,
+          verificationEmailSent: existingUserDelivery.sent,
+          canResendVerificationEmail: true,
+          alreadyExists: true
+        };
       }
-
-      const existingUserDelivery = await trySendVerificationEmail(existingUser);
-
-      return {
-        user: toAuthenticatedUser(existingUser),
-        verificationRequired: true,
-        verificationEmailSent: existingUserDelivery.sent,
-        canResendVerificationEmail: true,
-        alreadyExists: true
-      };
+      
+      // Username conflict
+      if (existingUser.username === input.username) {
+        throw new AppError(409, "Username already taken.", "USERNAME_IN_USE");
+      }
     }
 
     const passwordHash = await hashPassword(input.password);
@@ -251,10 +275,12 @@ export const authService = {
       data: {
         firstName: input.firstName,
         lastName: input.lastName,
+        username: input.username,
         email: input.email,
         passwordHash,
         role: "STUDENT",
-        status: "PENDING_VERIFICATION"
+        status: "ACTIVE",
+        emailVerifiedAt: new Date()
       }
     });
 
@@ -262,7 +288,7 @@ export const authService = {
 
     return {
       user: toAuthenticatedUser(user),
-      verificationRequired: true,
+      verificationRequired: false,
       verificationEmailSent: delivery.sent,
       canResendVerificationEmail: true,
       alreadyExists: false
@@ -270,11 +296,15 @@ export const authService = {
   },
 
   login: async (input: LoginInput): Promise<AuthenticationResult> => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        email: input.email
+        OR: [
+          { email: input.email },
+          { username: input.email }
+        ]
       }
     });
+
 
     if (!user) {
       throw new AppError(401, INVALID_CREDENTIALS_MESSAGE, "INVALID_CREDENTIALS");
@@ -560,7 +590,7 @@ export const authService = {
     userId: string;
     currentPassword: string;
     newPassword: string;
-  }): Promise<void> => {
+   }): Promise<void> => {
     if (input.currentPassword === input.newPassword) {
       throw new AppError(
         400,
