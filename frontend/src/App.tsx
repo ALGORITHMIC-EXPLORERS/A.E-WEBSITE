@@ -1,10 +1,12 @@
-import DesignCourses from "./pages/DesignCourses"
+// import DesignCourses from "./pages/DesignCourses"
+ import SingleCourse from "./pages/SingleCourse"
 
 function App() {
 
   return (
     <>
-      <DesignCourses/>
+      {/* <DesignCourses/> */}
+      <SingleCourse />
     </>
   )
 }
